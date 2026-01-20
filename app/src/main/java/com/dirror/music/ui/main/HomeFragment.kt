@@ -26,6 +26,7 @@ class HomeFragment : BaseFragment(){
     private val binding get() = _binding!!
 
     private val mainViewModel: MainViewModel by activityViewModels()
+    private var isLocalMode = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -43,9 +44,14 @@ class HomeFragment : BaseFragment(){
         // Banner
 //         initBanner()
         // 推荐歌单
-        refreshPlaylistRecommend()
+        val localMode = User.uid == 0L
+        applyLocalModeState(localMode)
+        if (!localMode) {
+            refreshPlaylistRecommend()
+            // 新歌速递
+            updateNewSong()
+        }
         // 新歌速递
-        updateNewSong()
         // 更改句子
         changeSentence()
     }
@@ -78,7 +84,7 @@ class HomeFragment : BaseFragment(){
 //                }
             }
             neteaseLiveVisibility.observe(viewLifecycleOwner) {
-                binding.clDaily.visibility = if (it) {
+                binding.clDaily.visibility = if (!isLocalMode && it) {
                     View.VISIBLE
                 } else {
                     View.GONE
@@ -93,8 +99,29 @@ class HomeFragment : BaseFragment(){
                     binding.tvFoyou.visibility = View.GONE
                 }
             }
+            userId.observe(viewLifecycleOwner) {
+                update()
+            }
         }
 
+    }
+
+    private fun applyLocalModeState(localMode: Boolean) {
+        isLocalMode = localMode
+        binding.tvPlaylistRecommend.text = if (localMode) {
+            getString(R.string.local_mode_discovery_unavailable)
+        } else {
+            getString(R.string.playlist_recommend)
+        }
+        val contentVisibility = if (localMode) View.GONE else View.VISIBLE
+        binding.rvPlaylistRecommend.visibility = contentVisibility
+        binding.tvNewSong.visibility = contentVisibility
+        binding.rvNewSong.visibility = contentVisibility
+        binding.clDaily.visibility = if (!localMode && (mainViewModel.neteaseLiveVisibility.value == true)) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
     }
 
     private fun changeSentence() {
