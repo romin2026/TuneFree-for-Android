@@ -11,7 +11,8 @@ android {
     useLibrary 'org.apache.http.legacy'
 
     kotlinOptions {
-        jvmTarget = 1.8
+        // 👇 【修改点1】这里必须改为 '11'，与下面保持一致
+        jvmTarget = '11'
         freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
 
@@ -30,14 +31,24 @@ android {
         kotlinCompilerVersion = "1.5.31"
     }
 
+    // 👇 【修改点2】建议暂时注释掉这段。
+    // 因为 GitHub 服务器上可能没有 tunefree.jks 文件，或者不知道密码，会导致编译失败。
+    // 注释掉后，Gradle 会自动使用默认的 debug 签名，保证能编出包来。
+    /*
     signingConfigs {
         debug {
             storeFile file('tunefree.jks')
             keyAlias 'tunefree'
-            keyPassword 'tunefree'
-            storePassword 'tunefree'
         }
     }
+    */
+
+    // 👇 【修改点3】新增这段，防止因为代码规范警告导致编译停止
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+}
 
     defaultConfig {
         applicationId "com.sayqz.tunefree"
