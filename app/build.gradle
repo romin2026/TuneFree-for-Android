@@ -3,15 +3,27 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
-}
+} // 👈 必须要有这个反大括号，而且不能漏掉！
 
 android {
     compileSdkVersion 32
 
     useLibrary 'org.apache.http.legacy'
 
+    defaultConfig {
+        // 注意：如果你之前有 applicationId, minSdkVersion 等配置，请保留原样！
+        // 如果不确定，可以暂时不改这一块，只检查上面的 plugins 花括号。
+        applicationId "com.dirror.music" // 示例，请确认你的包名
+        minSdkVersion 21
+        targetSdkVersion 32
+        versionCode 1
+        versionName "1.0"
+        
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
     kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = '11' // 记得我们改成 11 了
         freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
 
@@ -29,15 +41,7 @@ android {
         kotlinCompilerExtensionVersion = "1.0.5"
         kotlinCompilerVersion = "1.5.31"
     }
-
-    signingConfigs {
-        debug {
-            storeFile file('tunefree.jks')
-            keyAlias 'tunefree'
-        }
-    }
-    */
-
+    
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
