@@ -39,6 +39,9 @@ private const val DEFAULT_UID = 0L
 // @IgnoredOnParcel
 private const val DEFAULT_VIP_TYPE = 0
 
+// 本地模式开关
+private const val LOCAL_MODE = true
+
 /**
  * 网易云音乐用户
  *
@@ -51,10 +54,15 @@ object User {
 
     /** 用户 uid */
     var uid: Long = DEFAULT_UID
-        get() = mmkv.decodeLong(Config.UID, DEFAULT_UID)
+        get() = if (LOCAL_MODE) DEFAULT_UID else mmkv.decodeLong(Config.UID, DEFAULT_UID)
         set(value) {
-            mmkv.encode(Config.UID, value)
-            field = value
+            if (LOCAL_MODE) {
+                mmkv.encode(Config.UID, DEFAULT_UID)
+                field = DEFAULT_UID
+            } else {
+                mmkv.encode(Config.UID, value)
+                field = value
+            }
         }
 
     /** 用户 Cookie */
@@ -84,13 +92,16 @@ object User {
     /** 是否通过 uid 登录 */
     val isUidLogin: Boolean
         get() {
+            if (LOCAL_MODE) {
+                return false
+            }
             val uid = mmkv.decodeLong(Config.UID, DEFAULT_UID)
             return uid != DEFAULT_UID
         }
 
     /** 是否有 cookie */
     val hasCookie: Boolean
-        get() = AppConfig.cookie.isNotEmpty()
+        get() = if (LOCAL_MODE) false else AppConfig.cookie.isNotEmpty()
 
     /**
      * 是否是 VIP 用户
@@ -128,6 +139,5 @@ data class DsoUser(
     }
 
 }
-
 
 

@@ -45,7 +45,6 @@ import com.dirror.music.databinding.ActivityMainBinding
 import com.dirror.music.ui.activity.SearchActivity
 import com.dirror.music.ui.activity.SettingsActivity
 import com.dirror.music.ui.base.BaseActivity
-import com.dirror.music.ui.dialog.NoticeDialog
 import com.dirror.music.ui.main.viewmodel.MainViewModel
 import com.dirror.music.util.*
 import com.dirror.music.util.cache.ACache
@@ -62,13 +61,9 @@ import kotlin.concurrent.thread
 class MainActivity : BaseActivity() {
 
     companion object {
-        private const val ACTION_LOGIN = "com.sayqz.tunefree.LOGIN"
     }
 
     private lateinit var binding: ActivityMainBinding
-
-    /* 登录广播接受 */
-    private lateinit var loginReceiver: LoginReceiver
 
     /* 设置改变广播接收 */
     private lateinit var settingsChangeReceiver: SettingsChangeReceiver
@@ -97,11 +92,6 @@ class MainActivity : BaseActivity() {
     override fun initData() {
         // Intent 过滤器
         var intentFilter = IntentFilter()
-        intentFilter.addAction(ACTION_LOGIN)
-        loginReceiver = LoginReceiver()
-        registerReceiver(loginReceiver, intentFilter)
-
-        intentFilter = IntentFilter()
         intentFilter.addAction(SettingsActivity.ACTION)
         settingsChangeReceiver = SettingsChangeReceiver()
         registerReceiver(settingsChangeReceiver, intentFilter)
@@ -208,34 +198,7 @@ class MainActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         // 解绑广播接收
-        unregisterReceiver(loginReceiver)
         unregisterReceiver(settingsChangeReceiver)
-    }
-
-    inner class LoginReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            // 通知 viewModel
-            mainViewModel.setUserId()
-            NoticeDialog(
-                context, NoticeUtil.NoticeData(
-                    "提示", "为了确保您的账户设置更新生效，我们建议您按照以下步骤操作：\n" +
-                            "\n" +
-                            "1. 点击“确定”后，关闭当前的软件。\n" +
-                            "2. 重新启动软件以让账户登录生效。\n" +
-                            "\n" +
-                            "如果您发现登录的账户并非您自己的，或者您遇到了任何登录问题，请尝试以下解决方案：\n" +
-                            "\n" +
-                            "- 反复切换软件的深色模式。\n" +
-                            "- 多次重启软件。\n" +
-                            "\n" +
-                            "这些操作有助于重置软件状态，确保您能够顺利登录到自己的账户。如果问题依然存在，请联系我们的客户支持团队，我们将为您提供进一步的帮助。\n" +
-                            "\n" +
-                            "感谢您的理解与配合！\n", "", "", true
-                ),{
-                    finish()
-                }
-            ).show()
-        }
     }
 
     inner class SettingsChangeReceiver : BroadcastReceiver() {

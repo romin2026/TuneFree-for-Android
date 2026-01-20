@@ -62,7 +62,7 @@ class MyFragment : BaseFragment() {
 
         myFragmentUserAdapter = MyFragmentUserAdapter() {
             if (User.uid == 0L) {
-                App.activityManager.startLoginActivity(requireActivity())
+                toast("已启用本地模式")
             } else {
                 startUserActivity(requireActivity(), User.uid)
             }
@@ -111,7 +111,7 @@ class MyFragment : BaseFragment() {
         mainViewModel.userId.observe(viewLifecycleOwner) { userId ->
             if (userId == 0L) {
                 myFragmentUserAdapter.adapterUser = MyFragmentUserAdapter.AdapterUser(
-                    null, "立即登录", null
+                    null, "本地模式", null
                 )
             } else {
                 App.cloudMusicManager.getUserDetail(userId, {

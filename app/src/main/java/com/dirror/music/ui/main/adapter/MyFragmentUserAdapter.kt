@@ -78,14 +78,21 @@ class MyFragmentUserAdapter(
                 if (!User.isVip()) {
                     ivCVip.visibility = View.GONE
                 }
-                ivCover.load(it.cover + "?param=100y100") {
-                    transformations(CircleCropTransformation())
-                    crossfade(true)
+                it.cover?.let { cover ->
+                    ivCover.load(cover + "?param=100y100") {
+                        transformations(CircleCropTransformation())
+                        crossfade(true)
+                    }
+                } ?: run {
+                    ivCover.setImageResource(R.mipmap.ic_launcher_round)
                 }
-
-                tvLevel.text = "Lv.${it.level}"
+                it.level?.let { level ->
+                    tvLevel.text = "Lv.${level}"
+                } ?: run {
+                    tvLevel.text = ""
+                }
             }
-            tvNickname.text = User.dsoUser.nickname
+            tvNickname.text = adapterUser?.nickname ?: User.dsoUser.nickname
         }
     }
 

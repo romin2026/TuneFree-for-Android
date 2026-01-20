@@ -5,14 +5,12 @@ import android.content.Context
 import android.net.Uri
 import com.dirror.music.App
 import com.dirror.music.databinding.DialogSongMenuBinding
-import com.dirror.music.manager.User
 import com.dirror.music.music.local.MyFavorite
 import com.dirror.music.music.standard.data.SOURCE_NETEASE
 import com.dirror.music.music.standard.data.StandardSongData
 import com.dirror.music.plugin.PluginConstants
 import com.dirror.music.plugin.PluginSupport
 import com.dirror.music.ui.base.BaseBottomSheetDialog
-import com.dirror.music.util.AppConfig
 import com.dirror.music.util.MagicHttp
 import com.dirror.music.util.toast
 import gdut.bsx.share2.Share2
@@ -48,26 +46,6 @@ constructor(
             itemAddLocalMyFavorite.setOnClickListener {
                 MyFavorite.addSong(songData)
                 dismiss()
-            }
-            // 添加到网易云我喜欢
-            itemAddNeteaseFavorite.setOnClickListener {
-                if (AppConfig.cookie.isEmpty()) {
-                    toast("离线模式无法收藏到在线我喜欢~")
-                } else {
-                    when (songData.source) {
-                        SOURCE_NETEASE -> {
-                            App.cloudMusicManager.likeSong(songData.id ?: "", {
-                                toast("添加到我喜欢成功")
-                            }, {
-                                toast("添加到我喜欢失败")
-                            })
-                        }
-                        else -> {
-                            toast("暂不支持此音源")
-                            dismiss()
-                        }
-                    }
-                }
             }
             // 分享给好友
             itemSongShare.setOnClickListener {

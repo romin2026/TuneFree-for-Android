@@ -4,13 +4,9 @@ import android.content.Context
 import android.content.Intent
 import com.dirror.music.App
 import com.dirror.music.databinding.DialogPlayMoreBinding
-import com.dirror.music.manager.User
-import com.dirror.music.music.standard.data.SOURCE_NETEASE
-import com.dirror.music.music.standard.data.SOURCE_QQ
 import com.dirror.music.music.standard.data.StandardSongData
 import com.dirror.music.ui.activity.PlayHistoryActivity
 import com.dirror.music.ui.base.BaseBottomSheetDialog
-import com.dirror.music.util.AppConfig
 import com.dirror.music.util.toast
 
 class PlayerMenuMoreDialog(context: Context) : BaseBottomSheetDialog(context) {
@@ -34,30 +30,6 @@ class PlayerMenuMoreDialog(context: Context) : BaseBottomSheetDialog(context) {
 
     override fun initListener() {
         binding.apply {
-            // 添加到网易云我喜欢
-            itemAddNeteaseFavorite.setOnClickListener {
-                if (AppConfig.cookie.isEmpty()) {
-                    toast("离线模式无法收藏到在线我喜欢~")
-                } else {
-                    song?.let {
-                        when (it.source) {
-                            SOURCE_NETEASE -> {
-                                App.cloudMusicManager.likeSong(it.id?:"", {
-                                    toast("添加到我喜欢成功")
-                                    dismiss()
-                                }, {
-                                    toast("添加到我喜欢失败")
-                                    dismiss()
-                                })
-                            }
-                            SOURCE_QQ -> {
-                                toast("暂不支持此音源")
-                                dismiss()
-                            }
-                        }
-                    }
-                }
-            }
             // 歌曲信息
             itemSongInfo.setOnClickListener {
                 App.musicController.value?.getPlayingSongData()?.value?.let { it1 ->
