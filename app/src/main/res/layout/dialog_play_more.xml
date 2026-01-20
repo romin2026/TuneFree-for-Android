@@ -31,6 +31,7 @@
 
         <com.dirror.music.widget.ItemLayout
             android:id="@+id/itemAddNeteaseFavorite"
+            android:visibility="gone"
             app:text="@string/add_to_netease_favorite"
             android:layout_width="match_parent"
             android:layout_height="56dp" />

@@ -1,7 +1,6 @@
 package com.dirror.music.ui.main.adapter
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -9,16 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.dirror.music.App
 import com.dirror.music.R
-import com.dirror.music.manager.User
 import com.dirror.music.startLocalMusicActivity
 import com.dirror.music.ui.activity.PlayHistoryActivity
-import com.dirror.music.ui.activity.UserCloudActivity
 import com.dirror.music.ui.playlist.SongPlaylistActivity
 import com.dirror.music.ui.playlist.TAG_LOCAL_MY_FAVORITE
 import com.dirror.music.util.AnimationUtil
-import com.dirror.music.util.ErrorCode
 
 class MyFragmentIconAdapter(val context: Context): RecyclerView.Adapter<MyFragmentIconAdapter.ViewHolder>() {
 
@@ -44,6 +39,8 @@ class MyFragmentIconAdapter(val context: Context): RecyclerView.Adapter<MyFragme
                 AnimationUtil.click(it)
                 startLocalMusicActivity(context)
             }
+            clPersonalFM.visibility = View.GONE
+            clUserCloud.visibility = View.GONE
             // 我喜欢的音乐
             clFavorite.setOnClickListener {
                 AnimationUtil.click(it)
@@ -59,28 +56,6 @@ class MyFragmentIconAdapter(val context: Context): RecyclerView.Adapter<MyFragme
                 AnimationUtil.click(it)
                 val intent = Intent(context, PlayHistoryActivity::class.java)
                 context.startActivity(intent)
-            }
-            clPersonalFM.setOnClickListener {
-                AnimationUtil.click(it)
-                if (User.hasCookie) {
-                    if (App.musicController.value?.personFM?.value != true) {
-                        App.musicController.value?.setPersonFM(true)
-                        App.activityManager.startPlayerActivity(context as Activity)
-                    } else {
-                        App.activityManager.startPlayerActivity(context as Activity)
-                    }
-                } else {
-                    ErrorCode.toast(ErrorCode.ERROR_NOT_COOKIE)
-                }
-            }
-            // 用户云盘
-            clUserCloud.setOnClickListener {
-                AnimationUtil.click(it)
-                if (User.hasCookie) {
-                    context.startActivity(Intent(context, UserCloudActivity::class.java))
-                } else {
-                    ErrorCode.toast(ErrorCode.ERROR_NOT_COOKIE)
-                }
             }
         }
     }

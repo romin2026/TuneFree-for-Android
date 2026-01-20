@@ -53,9 +53,6 @@ fun MainMenu(activity: Activity, mainViewModel: MainViewModel) {
             }
             // MenuItem(resId = R.drawable.ic_extension, title = "拓展")
 
-            MenuItem(resId = R.drawable.ic_we, title = "切换账号") {
-                App.activityManager.startLoginActivity(activity)
-            }
             MenuItem(resId = R.drawable.ic_exit_app, title = "退出应用") {
                 App.musicController.value?.stopMusicService()
                 ActivityCollector.finishAll()
