@@ -86,9 +86,6 @@ android {
         }
     }
 
-    namespace 'com.dirror.music'
-}
-
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.5.31"
